@@ -2,48 +2,20 @@
 
 namespace RecursiveOperationsPrefixed
 {
-    class Program
+    public class Program
     {
         const string Operators = "+ - * /";
 
-        static void Main()
+        public static string PrefixedRecursive(string[] input)
         {
-            string[] input = Console.ReadLine().Trim().Split(' ');
-            if (ArrayContainsOperations(input))
+            if (input == null)
             {
-                PrefixedRecursive(input);
-            }
-            else
-            {
-                PrintArray(input);
-            }
-        }
-
-        private static void PrintArray(string[] input)
-        {
-            foreach (string element in input)
-            {
-                Console.Write(element + " ");
-            }
-        }
-
-        private static bool ArrayContainsOperations(string[] input)
-        {
-            foreach (string entity in input)
-            {
-                if (Operators.Contains(entity))
-                {
-                    return true;
-                }
+                throw new ArgumentNullException(nameof(input));
             }
 
-            return false;
-        }
-
-        private static void PrefixedRecursive(string[] input)
-        {
             const int step = 2;
             const int groupSize = 3;
+            string resultToPrint;
             double result;
             for (int i = 0; i < input.Length - step; i++)
             {
@@ -65,15 +37,56 @@ namespace RecursiveOperationsPrefixed
                         input[0..i].CopyTo(newInput, 0);
                         newInput[i] = result.ToString();
                         input[(i + groupSize) ..input.Length].CopyTo(newInput, i + 1);
-                        PrefixedRecursive(newInput);
+                        resultToPrint = PrefixedRecursive(newInput);
                     }
                     else
                     {
-                        Console.WriteLine(result);
+                        resultToPrint = result.ToString();
                     }
 
-                    break;
+                    return resultToPrint;
                 }
+            }
+
+            return "";
+        }
+
+        public static bool ArrayContainsOperations(string[] input)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+
+            foreach (string entity in input)
+            {
+                if (Operators.Contains(entity))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        static void Main()
+        {
+            string[] input = Console.ReadLine().Trim().Split(' ');
+            if (ArrayContainsOperations(input))
+            {
+                Console.WriteLine(PrefixedRecursive(input));
+            }
+            else
+            {
+                PrintArray(input);
+            }
+        }
+
+        private static void PrintArray(string[] input)
+        {
+            foreach (string element in input)
+            {
+                Console.Write(element + " ");
             }
         }
     }
